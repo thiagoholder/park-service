@@ -1,0 +1,12 @@
+# Dockerfile.k6
+FROM grafana/k6:latest
+
+# Copy the gRPC test script and the proto folder to the container
+COPY grpc-test.js /src/grpc-test.js
+COPY proto /src/proto
+
+# Set the working directory
+WORKDIR /src
+
+# Command to run the k6 test
+CMD ["run", "/src/grpc-test.js"]

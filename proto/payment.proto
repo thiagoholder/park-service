@@ -1,0 +1,45 @@
+// proto/payment.proto
+syntax = "proto3";
+
+package payment;
+
+service PaymentService {
+  rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse);
+  rpc GetPayment (GetPaymentRequest) returns (GetPaymentResponse);
+  rpc ListPayments (ListPaymentsRequest) returns (ListPaymentsResponse);
+}
+
+message CreatePaymentRequest {
+  string carPlate = 1;
+  double amount = 2;
+}
+
+message CreatePaymentResponse {
+  string paymentId = 1;
+  string status = 2;
+  string message = 3;
+}
+
+message GetPaymentRequest {
+  string paymentId = 1;
+}
+
+message GetPaymentResponse {
+  string paymentId = 1;
+  string carPlate = 2;
+  double amount = 3;
+  string status = 4;
+}
+
+message ListPaymentsRequest {}
+
+message ListPaymentsResponse {
+  repeated Payment payments = 1;
+}
+
+message Payment {
+  string paymentId = 1;
+  string carPlate = 2;
+  double amount = 3;
+  string status = 4;
+}

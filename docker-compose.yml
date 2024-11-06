@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  grpc-server:
+    build:
+      context: ./park-payment
+      dockerfile: Dockerfile
+    image: grpc-server
+    container_name: grpc-server
+    ports:
+      - "5000:5000"
+    networks:
+      - test-network
+    volumes:
+      - ./proto:/app/proto
+    env_file: .env.docker
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  k6-test:
+    build:
+      context: ./
+      dockerfile: Dockerfile.k6
+    image: k6-grpc-test
+    container_name: k6-grpc-test
+    depends_on:
+      - grpc-server
+    networks:
+      - test-network
+    entrypoint: ["sh", "-c", "sleep 5 && k6 run /src/grpc-test.js"]
+
+networks:
+  test-network:
+    driver: bridge
